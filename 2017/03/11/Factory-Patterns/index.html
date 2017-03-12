@@ -7,12 +7,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="google-site-verification" content="" />
   
-  <title>BETTER</title>
+  <title>.NET Framework中的设计模式——工厂模式</title>
   <meta name="author" content="Vachel">
    <meta name="description" content="C# Developer">
   
 
-  <meta property="og:title" content="BETTER"/>
+  <meta property="og:title" content=".NET Framework中的设计模式——工厂模式"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:site_name" content="Vachel&#39;s blog"/>
  <meta property="og:image" content="undefined"/>
@@ -45,7 +45,7 @@
       
   
     <h1 class="page-title center">
-        BETTER
+        .NET Framework中的设计模式——工厂模式
     </h1>
   
 
@@ -53,12 +53,17 @@
     </div>
     <div class="meta center">
       
-<time datetime="2017-03-10T09:48:44.278Z">
+<time datetime="2017-03-11T07:05:26.000Z">
   <i class="fa fa-calendar"></i>&nbsp;
-  2017-03-10
+  2017-03-11
 </time>
 
 
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/categories/总结/">总结</a>
 
 
 
@@ -66,7 +71,7 @@
     
     &nbsp;
     <i class="fa fa-tag"></i>&nbsp;
-    <a href="/tags/GOOD/">GOOD</a>
+    <a href="/tags/设计模式/">设计模式</a>·<a href="/tags/Design-Patterns/">Design Patterns</a>
 
 
     </div>
@@ -74,16 +79,7 @@
     <div class="picture-container">
       
     </div>
-    <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3> <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
+    <h2 id="简单工厂（Simple-factory）"><a href="#简单工厂（Simple-factory）" class="headerlink" title="简单工厂（Simple factory）"></a>简单工厂（Simple factory）</h2><h2 id="工厂方法模式（Factory-Method）"><a href="#工厂方法模式（Factory-Method）" class="headerlink" title="工厂方法模式（Factory Method）"></a>工厂方法模式（Factory Method）</h2><h2 id="抽象工厂模式（Abstract-Factory）"><a href="#抽象工厂模式（Abstract-Factory）" class="headerlink" title="抽象工厂模式（Abstract Factory）"></a>抽象工厂模式（Abstract Factory）</h2>
 
   </article>
   </script>
@@ -107,11 +103,11 @@
         <a href="#top" target="_self">
         <i class="fa fa-arrow-right"></i>
         </a>
-        © XXX 20xx-2017
+        © Vachel 2016-2017
     </div>
     <div class="secondrow">
-        <a href="https://github.com/gaoryrt/hexo-theme-pln">
-        Theme Pln
+        <a href="https://github.com/Wenqihai">
+        Vachel
         </a>
     </div>
 </div>
