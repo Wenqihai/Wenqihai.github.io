@@ -1,12 +1,85 @@
-<?xml version="1.0" encoding="utf-8"?>
-<search>
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
   
+  <title>理解设计模式——工厂模式</title>
+  <meta name="author" content="Vachel">
+   <meta name="description" content="C# Developer">
   
+
+  <meta property="og:title" content="理解设计模式——工厂模式"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Vachel&#39;s blog"/>
+ <meta property="og:image" content="undefined"/>
+  
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Vachel&#39;s blog" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+  <a id="top"></a>
+  <div id='wx_pic' style='display:none;'><img src='/wx_share.png'/></div>
+  <div id="main">
+    <div class="behind">
+      <div class="back">
+        <a href="/" class="black-color"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </div>
+      <div class="description">
+        &nbsp;Enjoy coding...
+      </div>
+    </div>
+    <div class="container">
+      
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        理解设计模式——工厂模式
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      
+<time datetime="2017-03-12T17:00:00.000Z">
+  <i class="fa fa-calendar"></i>&nbsp;
+  2017-03-13
+</time>
+
+
+
     
-    <entry>
-      <title><![CDATA[理解设计模式——工厂模式]]></title>
-      <url>https://wenqihai.github.io/2017/03/13/Factory-Patterns/</url>
-      <content type="html"><![CDATA[<p>设计模式算是一个古老的话题了，谈到OOP就不得不讲设计模式，通俗的讲，设计模式就是大量实践后总结出来的，利于构建松耦合、易扩展、高复用系统的编码套路。<br>本文介绍的是工厂模式，参考书是<a href="https://book.douban.com/subject/2243615/" target="_blank" rel="external">《Head First 设计模式》</a>，很好的一本书，看第一遍是在2年前，现在重新刷一遍，，总结一下。</p>
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/categories/总结/">总结</a>
+
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/tags/设计模式/">设计模式</a>·<a href="/tags/Design-Patterns/">Design Patterns</a>
+
+
+    </div>
+    <hr>
+    <div class="picture-container">
+      
+    </div>
+    <p>设计模式算是一个古老的话题了，谈到OOP就不得不讲设计模式，通俗的讲，设计模式就是大量实践后总结出来的，利于构建松耦合、易扩展、高复用系统的编码套路。<br>本文介绍的是工厂模式，参考书是<a href="https://book.douban.com/subject/2243615/" target="_blank" rel="external">《Head First 设计模式》</a>，很好的一本书，看第一遍是在2年前，现在重新刷一遍，，总结一下。</p>
 <h2 id="从简单工厂开始（Simple-Factory）"><a href="#从简单工厂开始（Simple-Factory）" class="headerlink" title="从简单工厂开始（Simple Factory）"></a>从简单工厂开始（Simple Factory）</h2><p>先上代码：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ComputerStore</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Computer <span class="title">BuyComputer</span>(<span class="params"><span class="keyword">double</span> money</span>)</span></div><div class="line">    &#123;</div><div class="line">        Computer pc = <span class="keyword">new</span> Computer();</div><div class="line">        <span class="keyword">if</span> (money &gt; <span class="number">6000</span>)</div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I7 6700K"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX970"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"Z170"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">else</span> <span class="title">if</span> (<span class="params">money &gt; <span class="number">4000</span></span>)</span></div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I5 6600K"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX960"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"B150"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I5 6500"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX950"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"B150"</span>;</div><div class="line">        &#125;</div><div class="line">        InstallOS(pc);</div><div class="line">        InstallApp(pc);</div><div class="line">        DoSomeTest(pc);</div><div class="line">        <span class="keyword">return</span> pc;</div><div class="line">    &#125;</div><div class="line">    InstallOS(Computer pc) &#123; ... &#125;</div><div class="line">    InstallApp(Computer pc) &#123; ... &#125;</div><div class="line">    DoSomeTest(Computer pc) &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>我们几乎可以自然而然的想到，把创建Computer对象及初始化的的代码给拿出来，因为由于配件价格的变动，装配方案是会经常调整的，比如现在Intel出了7代CPU，6000价位以上便可配I7 7700K了，我们把它改成一个有模有样的工厂：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ComputerStore</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Computer <span class="title">BuyComputer</span>(<span class="params"><span class="keyword">double</span> money</span>)</span></div><div class="line">    &#123;</div><div class="line">        Computer pc = AssembleComputer(money); <span class="comment">//把组装电脑的代码放到了一个单独的类里头</span></div><div class="line">        InstallOS(pc);</div><div class="line">        InstallApp(pc);</div><div class="line">        DoSomeTest(pc);</div><div class="line">        <span class="keyword">return</span> pc;</div><div class="line">    &#125;</div><div class="line">    InstallOS(Computer pc) &#123; ... &#125;</div><div class="line">    InstallApp(Computer pc) &#123; ... &#125;</div><div class="line">    DoSomeTest(Computer pc) &#123; ... &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ComputerAssembleFactory</span> <span class="comment">//组装工厂，称之为组装间会合适点，这里只是为了有模有样</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">AssembleComputer</span>(<span class="params"><span class="keyword">double</span> money</span>)</span></div><div class="line">    &#123;</div><div class="line">        Computer pc = <span class="keyword">new</span> Computer();</div><div class="line">        <span class="keyword">if</span> (money &gt; <span class="number">6000</span>)</div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I7 6700K"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX970"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"Z170"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">else</span> <span class="title">if</span> (<span class="params">money &gt; <span class="number">4000</span></span>)</span></div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I5 6600K"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX960"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"B150"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            pc = <span class="keyword">new</span> Computer();</div><div class="line">            pc.CPU = <span class="string">"I5 6500"</span>;</div><div class="line">            pc.GPU = <span class="string">"GTX950"</span>;</div><div class="line">            pc.Mainboard = <span class="string">"B150"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> pc;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>我们可以这样理解，ComputerStore的关注点在于电脑的销售，拿着价格单配置单面对客户就行了，至于这个价钱是买5代I7还是6代I7，还有零件的装配啥的，交给组装间就行了。<br>我们使用一个对象时，并不关心它是怎么造出来的，制造流程的变化，不应该影响我使用。简单工厂目的在于把类的构造及初始化的逻辑，封装到一起，让一个类<strong>只有一个被修改的理由</strong>。当然其实并不是非得某某Factory的才是工厂，像Encoding类的<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> encoding = Encoding.GetEncoding(<span class="string">"UTF8"</span>);</div></pre></td></tr></table></figure></p>
@@ -18,174 +91,62 @@
 <p>这样是不是优雅很多了呢，我们看不到乱七八糟的Factory了，Intel电脑店对应IntelComputerStore，AMD电脑店对应AMDComputerStore,相当自然，效果还是一样的，ComputerStore里的代码得到了复用，所有的修改和扩展都只需要修改ComputerStore的子类。<br><strong>工厂方法模式定义了一个创建对象的接口，留给子类实现，把对象的实例化推迟到了子类。</strong><br>其实抽象工厂模式中，抽象工厂的具体实现，就相当于工厂方法模式，父类定义创建的接口，子类定义具体实现。不过抽象工厂可以有一组创建对象的接口，这些对象都是相关的，工厂方法则没有这个效果。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>《Head First 设计模式》里花了很大的篇幅讲解工厂模式，例子、插图、疑难解答等，概括地说，简单工厂封装了创建对象的代码以应对修改；抽象工厂模式定义了创建对象的接口，让使用对象的逻辑和具体对象以及创建对象的逻辑解耦（<strong>依赖倒置原则</strong>）；工厂方法模式定义接口，将对象的创建交给子类。抽象工厂模式通过组合来实现复用，工厂方法模式则是通过继承来实现。  .NET Framework中也有不少工厂模式范例，比如WebRequest类（工厂方法），DbProviderFactory（抽象工厂）等，这里就不详细讨论了。</p>
 <p>本文的例子可能不是太好，这只是我自己的理解，仅供参考。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> 总结 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 设计模式 </tag>
-            
-            <tag> Design Patterns </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Markdown学习笔记]]></title>
-      <url>https://wenqihai.github.io/2017/03/11/Markdown/</url>
-      <content type="html"><![CDATA[<p>&ensp;&ensp;弄好GitHub Pages后做的第一件事是学习 <strong>Markdown</strong> 的用法，现学现用，记录一下常用语法。<br>参考自<a href="http://www.markdown-tutorial.com/#/" target="_blank" rel="external">markdown-tutorial</a></p>
-<h2 id="Headers"><a href="#Headers" class="headerlink" title="Headers"></a>Headers</h2><ul>
-<li><h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1></li>
-<li><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2></li>
-<li><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3></li>
-<li><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><blockquote>
-<ul>
-<li># 一级标题</li>
-<li>## 二级标题</li>
-<li>### 三级标题</li>
-<li>#### 四级标题</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<h2 id="Italics-and-Bold"><a href="#Italics-and-Bold" class="headerlink" title="Italics and Bold"></a>Italics and Bold</h2><ul>
-<li><em>Italics</em> <em>Italics</em></li>
-<li><strong>Bold</strong>  <strong>Bold</strong><blockquote>
-<ul>
-<li>*Italics* _Italics_</li>
-<li>**Bold** __Bold__</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2><p><a href="https://wenqihai.github.io">Vachel’s belog</a></p>
-<blockquote>
-<p>[Vachel’s belog](<a href="https://wenqihai.github.io">https://wenqihai.github.io</a>)</p>
-</blockquote>
-<h2 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h2><p><img src="https://github.com/fluidicon.png" alt="GitHub"></p>
-<blockquote>
-<p>![GitHub](<a href="https://github.com/fluidicon.png" target="_blank" rel="external">https://github.com/fluidicon.png</a>)</p>
-</blockquote>
-<h2 id="Blockquotes"><a href="#Blockquotes" class="headerlink" title="Blockquotes"></a>Blockquotes</h2><blockquote>
-<p>“Hello world,hello everyone!”<br>>“Hello world,hello everyone!”</p>
-<h1 id="Unordered-Lists"><a href="#Unordered-Lists" class="headerlink" title="Unordered Lists"></a>Unordered Lists</h1><ul>
-<li>Monday</li>
-<li>Tuesday</li>
-<li>Wednesday</li>
-<li>Thursday </li>
-</ul>
-<p>* Monday<br>* Tuesday<br>* Wednesday<br>* Thursday </p>
-</blockquote>
-<h2 id="Ordered-Lists"><a href="#Ordered-Lists" class="headerlink" title="Ordered Lists"></a>Ordered Lists</h2><ol>
-<li>Friday</li>
-<li>Saturday</li>
-<li>Sunday</li>
-</ol>
-<blockquote>
-<p>1. Friday<br>2. Saturday<br>3. Sunday  </p>
-</blockquote>
-<h2 id="Nested-Lists"><a href="#Nested-Lists" class="headerlink" title="Nested Lists"></a>Nested Lists</h2><ul>
-<li>Weekdays<ul>
-<li><ul>
-<li>Monday</li>
-</ul>
-</li>
-<li><ul>
-<li>Tuesday</li>
-</ul>
-</li>
-<li><ul>
-<li>Wednesday </li>
-</ul>
-</li>
-<li><ul>
-<li>Thursday</li>
-</ul>
-</li>
-<li><ul>
-<li>Saturday</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Weekend<ul>
-<li><ul>
-<li>Saturday</li>
-</ul>
-</li>
-<li><ul>
-<li>Sunday</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>* Weekdays<br> &ensp;+ <em> Monday<br> &ensp;+ </em> Tuesday<br> &ensp;+ <em> Wednesday<br> &ensp;+ </em> Thursday<br> &ensp;+ <em> Saturday<br> \</em> Weekend<br> &ensp;+ <em> Saturday<br> &ensp;+ </em> Sunday  </p>
-</blockquote>
-<h2 id="Paragraphs"><a href="#Paragraphs" class="headerlink" title="Paragraphs"></a>Paragraphs</h2><p>Where there is life,there is hope.<br>Can you can a can as a can canner can can a can?  </p>
-<blockquote>
-<p>Where there is life,there is hope.<br>Can you can a can as a can canner can can a can?  (two space after .)</p>
-</blockquote>
-<h2 id="Code-Spans"><a href="#Code-Spans" class="headerlink" title="Code Spans"></a>Code Spans</h2><p><code>printf(&quot;Hello World!&quot;)</code></p>
-<blockquote>
-<p>`printf(“Hello World!”)`</p>
-</blockquote>
-<h2 id="Code-Blocks"><a href="#Code-Blocks" class="headerlink" title="Code Blocks"></a>Code Blocks</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> <span class="title">Program</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></div><div class="line">    &#123;</div><div class="line">        Cosole.WriteLine(<span class="string">"Hello World!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>```<br>codes<br>```</p>
-</blockquote>
-<h2 id="Escape-Characters"><a href="#Escape-Characters" class="headerlink" title="Escape Characters"></a>Escape Characters</h2><p>#</p>
-<blockquote>
-<p>\#</p>
-</blockquote>
-]]></content>
-      
-        <categories>
-            
-            <category> 笔记 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> Markdown </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Hello GitHub Pages!]]></title>
-      <url>https://wenqihai.github.io/2017/03/10/Hello%20GitHub%20Pages/</url>
-      <content type="html"><![CDATA[<p>花了好几个小时，整好了GitHub Pages + Hexo+Pln主题。北京时间2017年3月10日21点03分，GitHub上的博客生涯正式开始，Mark一下。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> 笔记 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> Markdown </tag>
-            
-        </tags>
-        
-    </entry>
-    
-  
-  
-    
-  
-</search>
+
+
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot container">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <i class="fa fa-arrow-right"></i>
+        </a>
+        © Vachel 2016-2017
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/Wenqihai">
+        Vachel
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>
