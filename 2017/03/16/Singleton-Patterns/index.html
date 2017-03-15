@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>理解设计模式——单件模式</title>
+  <meta name="author" content="Vachel">
+   <meta name="description" content="C# Developer">
+  
+
+  <meta property="og:title" content="理解设计模式——单件模式"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Vachel&#39;s blog"/>
+ <meta property="og:image" content="undefined"/>
+  
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Vachel&#39;s blog" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+  <a id="top"></a>
+  <div id='wx_pic' style='display:none;'><img src='/wx_share.png'/></div>
+  <div id="main">
+    <div class="behind">
+      <div class="back">
+        <a href="/" class="black-color"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </div>
+      <div class="description">
+        &nbsp;Enjoy coding...
+      </div>
+    </div>
+    <div class="container">
+      
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        理解设计模式——单件模式
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      
+<time datetime="2017-03-15T16:17:00.000Z">
+  <i class="fa fa-calendar"></i>&nbsp;
+  2017-03-16
+</time>
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/categories/总结/">总结</a>
+
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/tags/设计模式/">设计模式</a>·<a href="/tags/Design-Patterns/">Design Patterns</a>
+
+
+    </div>
+    <hr>
+    <div class="picture-container">
+      
+    </div>
+    <p>单件模式（Singleton Pattern)相当好理解，直接上定义：<strong>单件模式确保一个类只有一个实例，并提供一个全局的访问点。</strong><br>实现单件模式的关键在于构造函数设置为私有，然后通过一个公开的静态方法获取类的实例。<br>实现方法及面对的问题有很多，在<a href="http://csharpindepth.com/articles/general/singleton.aspx" target="_blank" rel="external">《Implementing the Singleton Pattern in C#》</a> 中有很全的介绍，这里只贴一下最佳实践：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">Singleton</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Lazy&lt;Singleton&gt; lazy =</div><div class="line">        <span class="keyword">new</span> Lazy&lt;Singleton&gt;(() =&gt; <span class="keyword">new</span> Singleton());</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton Instance &#123; <span class="keyword">get</span> &#123; <span class="keyword">return</span> lazy.Value; &#125; &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span>(<span class="params"></span>)</span></div><div class="line">    &#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>单件模式的主要问题无非是线程安全及延迟加载，这个写法利用Lazy类型，既达到了线程安全的目的，又实现了延迟加载，代码也比double-check locking方式简洁，比nested classes方式好理解。<br>主要疑问：  </p>
+<ol>
+<li><p><strong>单件模式和静态类有什么区别？</strong><br> 其实说到单实例，我第一个想到的是定义一个静态类，然后让所有将所有方法和属性都定义为静态的。因为静态类无法实例化，所以达到了单件模式的效果。目前我还没有想到静态类方式有什么致命的缺点，《Head First 设计模式》里只是讲JAVA中，在类的初始化比较复杂的情况下，静态类的方式可能有BUG。此外，静态类的方法属于类的单件，我们讲的单件模式，强调的是<strong>类只有一个实例</strong>，建议通常情况下使用实例的单件。  </p>
+</li>
+<li><p><strong>为什么不直接使用全局变量？</strong><br> 全局变量可以实现全局访问同一个实例，但不能保证只创建/只存在一个实例。此外，全局变量也没有做到延迟实例化。  </p>
+</li>
+</ol>
+
+
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot container">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <i class="fa fa-arrow-right"></i>
+        </a>
+        © Vachel 2016-2017
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/Wenqihai">
+        Vachel
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>
