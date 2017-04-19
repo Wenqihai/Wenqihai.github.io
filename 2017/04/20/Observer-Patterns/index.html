@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>理解设计模式——观察者模式</title>
+  <meta name="author" content="Vachel">
+   <meta name="description" content="C# Developer">
+  
+
+  <meta property="og:title" content="理解设计模式——观察者模式"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Vachel&#39;s blog"/>
+ <meta property="og:image" content="undefined"/>
+  
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Vachel&#39;s blog" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+  <a id="top"></a>
+  <div id='wx_pic' style='display:none;'><img src='/wx_share.png'/></div>
+  <div id="main">
+    <div class="behind">
+      <div class="back">
+        <a href="/" class="black-color"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </div>
+      <div class="description">
+        &nbsp;Enjoy coding...
+      </div>
+    </div>
+    <div class="container">
+      
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        理解设计模式——观察者模式
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      
+<time datetime="2017-04-19T17:18:00.000Z">
+  <i class="fa fa-calendar"></i>&nbsp;
+  2017-04-20
+</time>
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/categories/总结/">总结</a>
+
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/tags/设计模式/">设计模式</a>·<a href="/tags/Design-Patterns/">Design Patterns</a>
+
+
+    </div>
+    <hr>
+    <div class="picture-container">
+      
+    </div>
+    <p>观察者模式（observer pattern），可以用三个字概括：一对多。其实我个人更喜欢称之为“发布/订阅模式”，理由下面会讲到。具体地说，<strong>观察者模式定义了对象之间地一对多依赖，这样一来，当一个对象改变状态时，它的所有依赖者都会收到通知并自动更新。</strong><br>观察者模式涉及两类对象，首先是“主题”（Subject),也就是消息的产生者，被“观察”的对象；其次就是“观察者”（Observer），观察者可以有多个，和“主题”形成一对多的关系，只要“主题”有变化，所有与之相关的观察者，都会得到通知。以下是相关接口：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IObserver</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"><span class="keyword">string</span> msg</span>)</span>;<span class="comment">//主题更新时，会调用这个方法</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ISubject</span></div><div class="line">&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Subscribe</span>(<span class="params">IObserver o</span>)</span>;<span class="comment">//订阅主题</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Unsubscribe</span>(<span class="params">IObserver o</span>)</span>;<span class="comment">//取消订阅</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>观察者模式的目的在于尽量使交互对象之间松耦合，当主题的内部逻辑改变后，观察者不受影响；而观察者的添加、减少、收到通知后如何处理，也不影响主题。<br>下面用红绿灯为例，做一个简陋的实现：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TrafficLight</span> : <span class="title">ISubject</span></div><div class="line"> &#123;</div><div class="line">     List&lt;IObserver&gt; observerList = <span class="keyword">new</span> List&lt;IObserver&gt;();<span class="comment">//观察者列表</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Subscribe</span>(<span class="params">IObserver o</span>)</span></div><div class="line">     &#123;</div><div class="line">         observerList.Add(o);</div><div class="line">     &#125;</div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Unsubscribe</span>(<span class="params">IObserver o</span>)</span></div><div class="line">     &#123;</div><div class="line">         observerList.Remove(o);</div><div class="line">     &#125;</div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></div><div class="line">     &#123;</div><div class="line">         System.Timers.Timer timer = <span class="keyword">new</span> System.Timers.Timer();<span class="comment">//启动一个定时器，30秒更新一下红绿灯状态</span></div><div class="line">         timer.Interval = <span class="number">30000</span>;</div><div class="line">         timer.Elapsed += Timer_Elapsed;</div><div class="line">         timer.Start();</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">bool</span> red;</div><div class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Timer_Elapsed</span>(<span class="params"><span class="keyword">object</span> sender, System.Timers.ElapsedEventArgs e</span>)</span></div><div class="line">     &#123;</div><div class="line">         red = !red;</div><div class="line">         <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> observerList) <span class="comment">//通知所有车辆，信号灯变了</span></div><div class="line">         &#123;</div><div class="line">             item.Update(red ? <span class="string">"红"</span> : <span class="string">"绿"</span>);</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Car</span> : <span class="title">IObserver</span></div><div class="line"> &#123;</div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Update</span>(<span class="params"><span class="keyword">string</span> msg</span>)</span></div><div class="line">     &#123;</div><div class="line">         <span class="keyword">if</span> (msg == <span class="string">"红"</span>)</div><div class="line">             Stop();</div><div class="line">         <span class="function"><span class="keyword">else</span></span></div><div class="line">             <span class="title">Go</span>(<span class="params"></span>);</div><div class="line">     &#125;</div><div class="line">     <span class="function"><span class="keyword">void</span> <span class="title">Stop</span>(<span class="params"></span>)</span></div><div class="line">     &#123;</div><div class="line">         Console.WriteLine(<span class="string">"Wating..."</span>);</div><div class="line">     &#125;</div><div class="line">     <span class="function"><span class="keyword">void</span> <span class="title">Go</span>(<span class="params"></span>)</span></div><div class="line">     &#123;</div><div class="line">         Console.WriteLine(<span class="string">"Go!"</span>);</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>写完才发现红绿灯这个例子和教科书上的不太一致，因为这个场景下，车在路口前订阅信号灯消息，通过后即可立刻取消。大体意思还是一样的。<br>以上代码是教科书式的观察者模式，实际上，.NET框架中，观察者模式的思想随处可见：事件机制。一个事件就相当于一个发布者，事件的绑定与解绑，就相当于观察者模式的订阅与取消。当然，事件并不等同与观察者模式，只是.NET的事件机制，能轻易实现观察者模式：事件的触发者与事件的订阅者相互保持独立，一个事件可以被多次订阅。<br>之所以前面提到，我更喜欢称观察者模式为订阅/发布模式，是因为<strong>从线程以及方法调用的角度来讲，“观察” = 轮询，“通知” = 回调。从定义可以看出，观察者模式应该属于“推”，即通过订阅操作注册回调方法，消息发布时，“发布者”调用回调方法，将消息“推”到“订阅者”。</strong>所以，本人窃以为，叫做“订阅/发布”模式，理解起来更准确。<br>这个模式在.NET中，有以下几点值得注意的（其实也就是事件的坑）：</p>
+<ul>
+<li>事件是由哪一个线程触发的。winform里头，后台线程是不能直接操作UI对象的，所以这个问题几乎玩过winform的人都会遇到。</li>
+<li>事件可以用 += 符号绑定多个方法，触发时逐个调用，如果中间一个方法阻塞，则该执行线程阻塞，给人的感觉就是，订阅者影响了发布者，和设计逻辑严重不符；如果中间一个方法异常，则后面的方法不会被调用，可怕的是，如果你用一个Task来触发事件，则异常消息很可能消失在异次元。<br>刚刚写上面的例子的时候，发现.NET类库中，已经设计好了观察者模式的接口，模式比教科书式的还要完美一些，虽然自己没用过，这里还是贴一下留作纪念:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">//</div><div class="line">  // 摘要:</div><div class="line">  //     提供用于接收基于推送的通知的机制。</div><div class="line">  //</div><div class="line">  // 类型参数:</div><div class="line">  //   T:</div><div class="line">  //     提供通知信息的对象。</div><div class="line">  public interface IObserver&lt;in T&gt;</div><div class="line">  &#123;</div><div class="line">      //</div><div class="line">      // 摘要:</div><div class="line">      //     通知观察者，提供程序已完成发送基于推送的通知。</div><div class="line">      void OnCompleted();</div><div class="line">      //</div><div class="line">      // 摘要:</div><div class="line">      //     通知观察者，提供程序遇到错误情况。</div><div class="line">      //</div><div class="line">      // 参数:</div><div class="line">      //   error:</div><div class="line">      //     一个提供有关错误的附加信息的对象。</div><div class="line">      void OnError(Exception error);</div><div class="line">      //</div><div class="line">      // 摘要:</div><div class="line">      //     向观察者提供新数据。</div><div class="line">      //</div><div class="line">      // 参数:</div><div class="line">      //   value:</div><div class="line">      //     当前的通知信息。</div><div class="line">      void OnNext(T value);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">   //</div><div class="line">  // 摘要:</div><div class="line">  //     定义基于推送的通知的提供程序。</div><div class="line">  //</div><div class="line">  // 类型参数:</div><div class="line">  //   T:</div><div class="line">  //     提供通知信息的对象。</div><div class="line">  public interface IObservable&lt;out T&gt;</div><div class="line">  &#123;</div><div class="line">      //</div><div class="line">      // 摘要:</div><div class="line">      //     通知提供程序：某观察程序将要接收通知。</div><div class="line">      //</div><div class="line">      // 参数:</div><div class="line">      //   observer:</div><div class="line">      //     要接收通知的对象。</div><div class="line">      //</div><div class="line">      // 返回结果:</div><div class="line">      //     使资源释放的观察程序的接口。</div><div class="line">      IDisposable Subscribe(IObserver&lt;T&gt; observer);</div></pre></td></tr></table></figure></li>
+</ul>
+
+
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    page PV:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    site PV:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    site UV:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot container">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <i class="fa fa-arrow-right"></i>
+        </a>
+        © Vachel 2016-2017
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/Wenqihai">
+        Vachel
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>
